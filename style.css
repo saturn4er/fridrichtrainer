@@ -326,7 +326,6 @@ button[type="submit"], .button {
 .train-case .case-cube { margin: 0 auto; }
 .train-run { flex: 1; min-width: 300px; max-width: 620px; }
 .train-run .timer { padding-top: 12px; }
-.reveal summary { cursor: pointer; color: var(--muted); margin: 8px 0; }
 .result h2 { display: flex; justify-content: space-between; align-items: baseline; margin: 6px 0 10px; }
 .result-time { font: 600 26px var(--mono); }
 .result .next { margin-top: 4px; }

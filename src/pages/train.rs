@@ -39,7 +39,14 @@ pub fn TrainPage(set: Option<Set>, status: StatusFilter, case: Option<String>) -
         result.set(None);
         current.set(pick());
     };
-    let url = move |set: Option<Set>, status: StatusFilter| Route::Train { set, status, case: None }.href();
+    let url = move |set: Option<Set>, status: StatusFilter| {
+        Route::Train {
+            set,
+            status,
+            case: None,
+        }
+        .href()
+    };
 
     view! {
         <div class="train-filters">
@@ -93,10 +100,17 @@ pub fn TrainPage(set: Option<Set>, status: StatusFilter, case: Option<String>) -
 }
 
 #[component]
-fn Training(case: &'static Case, result: RwSignal<Option<i64>>, #[prop(into)] on_next: Callback<()>) -> impl IntoView {
+fn Training(
+    case: &'static Case,
+    result: RwSignal<Option<i64>>,
+    #[prop(into)] on_next: Callback<()>,
+) -> impl IntoView {
     let data = use_store();
     let s = t();
-    let alg = move || data.with(|d| d.custom_alg(&case.id)).unwrap_or_else(|| case.alg.to_owned());
+    let alg = move || {
+        data.with(|d| d.custom_alg(&case.id))
+            .unwrap_or_else(|| case.alg.to_owned())
+    };
     let times = Signal::derive(move || data.with(|d| d.times(&case.id)));
 
     view! {
@@ -115,17 +129,10 @@ fn Training(case: &'static Case, result: RwSignal<Option<i64>>, #[prop(into)] on
                     has_next=Signal::derive(move || result.get().is_some())
                     on_next=on_next
                 />
-                {move || match result.get() {
-                    None => {
-                        view! {
-                            <details class="reveal">
-                                <summary>{s.peek}</summary>
-                                <code class="alg big">{alg}</code>
-                            </details>
-                        }
-                            .into_any()
-                    }
-                    Some(ms) => {
+                {move || {
+                    result
+                        .get()
+                        .map(|ms| {
                         view! {
                             <div class="result">
                                 <h2>
@@ -140,8 +147,7 @@ fn Training(case: &'static Case, result: RwSignal<Option<i64>>, #[prop(into)] on
                                 <p class="muted">{s.next_hint}</p>
                             </div>
                         }
-                            .into_any()
-                    }
+                        })
                 }}
             </div>
         </div>

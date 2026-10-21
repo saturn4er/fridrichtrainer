@@ -83,7 +83,6 @@ pub struct Strings {
     pub no_cases_link: &'static str,
     pub no_cases_end: &'static str,
     pub set_up: &'static str,
-    pub peek: &'static str,
     pub next_case: &'static str,
     pub next_hint: &'static str,
 
@@ -194,7 +193,6 @@ static EN: Strings = Strings {
     no_cases_link: "Algorithms",
     no_cases_end: " page or pick “Any”.",
     set_up: "Set up:",
-    peek: "Peek at the algorithm",
     next_case: "Next case →",
     next_hint: "Space or Enter — next.",
 
@@ -332,7 +330,6 @@ static UK: Strings = Strings {
     no_cases_link: "Алгоритми",
     no_cases_end: " або обери «Будь-які».",
     set_up: "Виставити:",
-    peek: "Підглянути алгоритм",
     next_case: "Наступний випадок →",
     next_hint: "Пробіл або Enter — наступний.",
 
