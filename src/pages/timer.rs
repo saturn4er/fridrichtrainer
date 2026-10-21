@@ -40,6 +40,10 @@ pub fn TimerPage() -> impl IntoView {
                         </button>
                     </div>
                     <code class="scramble-text">{move || scramble.get()}</code>
+                    <p class="hold">
+                        {s.hold[0]} " " <i class="swatch st-u"></i> " " {s.hold[1]} " "
+                        <i class="swatch st-f"></i> " " {s.hold[2]}
+                    </p>
                 </div>
                 {move || {
                     let mut cube = Cube::solved();

@@ -172,6 +172,10 @@ body.timing .timer-hint { visibility: hidden; }
 }
 
 .scramble-head { display: flex; align-items: baseline; gap: 12px; }
+.hold { margin: 6px 0 0; font-size: 12px; color: var(--muted); }
+.swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; border: 1px solid var(--frame); vertical-align: -1px; }
+.swatch.st-u { background: var(--st-u); }
+.swatch.st-f { background: var(--st-f); }
 .scramble-text { font-size: clamp(16px, 2.4vw, 22px); word-spacing: 0.25em; }
 .link { font: inherit; font-size: 13px; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; }
 

@@ -40,6 +40,8 @@ pub struct Strings {
 
     pub scramble: &'static str,
     pub new_scramble: &'static str,
+    /// Orientation to start a scramble from, around the two colour swatches.
+    pub hold: [&'static str; 3],
     pub solves: &'static str,
     pub best: &'static str,
     pub mean: &'static str,
@@ -145,6 +147,7 @@ static EN: Strings = Strings {
 
     scramble: "Scramble",
     new_scramble: "new",
+    hold: ["Start from a solved cube: yellow", "on top, green", "facing you."],
     solves: "Solves",
     best: "Best",
     mean: "Mean",
@@ -283,6 +286,7 @@ static UK: Strings = Strings {
 
     scramble: "Скрембл",
     new_scramble: "інший",
+    hold: ["Почни із зібраного кубика: жовтий", "згори, зелений", "до себе."],
     solves: "Збірок",
     best: "Найкраща",
     mean: "Середнє",
