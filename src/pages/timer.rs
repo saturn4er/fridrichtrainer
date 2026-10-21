@@ -33,11 +33,13 @@ pub fn TimerPage() -> impl IntoView {
         <div id="session">
             <section class="scramble">
                 <div>
-                    <span class="label">{s.scramble}</span>
+                    <div class="scramble-head">
+                        <span class="label">{s.scramble}</span>
+                        <button class="link" type="button" on:click=move |_| new_scramble()>
+                            {s.new_scramble}
+                        </button>
+                    </div>
                     <code class="scramble-text">{move || scramble.get()}</code>
-                    <button class="link" type="button" on:click=move |_| new_scramble()>
-                        {s.new_scramble}
-                    </button>
                 </div>
                 {move || {
                     let mut cube = Cube::solved();

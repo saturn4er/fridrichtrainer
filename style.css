@@ -171,7 +171,8 @@ body.timing .timer-hint { visibility: hidden; }
   color: var(--muted);
 }
 
-.scramble-text { font-size: clamp(16px, 2.4vw, 22px); word-spacing: 0.25em; margin-right: 10px; }
+.scramble-head { display: flex; align-items: baseline; gap: 12px; }
+.scramble-text { font-size: clamp(16px, 2.4vw, 22px); word-spacing: 0.25em; }
 .link { font: inherit; font-size: 13px; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; }
 
 .stats {
