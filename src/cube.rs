@@ -180,6 +180,48 @@ pub fn invert(alg: &str) -> String {
         .join(" ")
 }
 
+/// Rewrites `alg` for the cube held a quarter turn further around U, so the
+/// same case is solved from the next side without a rotation: R becomes B,
+/// B becomes L, L becomes F and F becomes R.
+pub fn turn_alg(alg: &str) -> String {
+    let cleaned: String = alg
+        .chars()
+        .map(|c| if "()[]".contains(c) { ' ' } else { c })
+        .collect();
+    cleaned
+        .split_whitespace()
+        .map(|token| {
+            let mut chars = token.chars();
+            let base = chars.next().unwrap_or_default();
+            let rest: String = chars.collect();
+            let (mapped, flip) = match base {
+                'R' => ('B', false),
+                'B' => ('L', false),
+                'L' => ('F', false),
+                'F' => ('R', false),
+                'r' => ('b', false),
+                'b' => ('l', false),
+                'l' => ('f', false),
+                'f' => ('r', false),
+                'M' => ('S', false),
+                'S' => ('M', true),
+                'x' => ('z', true),
+                'z' => ('x', false),
+                other => (other, false),
+            };
+            let rest = if !flip || rest.starts_with('2') {
+                rest
+            } else if let Some(r) = rest.strip_prefix('\'') {
+                r.to_owned()
+            } else {
+                format!("{rest}'")
+            };
+            format!("{mapped}{rest}")
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
 fn rotate_ccw(v: V3, axis: usize) -> V3 {
     let [x, y, z] = v;
     match axis {

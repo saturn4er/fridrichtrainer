@@ -1,4 +1,4 @@
-use leptos::prelude::*;
+use leptos::prelude::{Set as _, *};
 
 use crate::{
     algs::{self, Case},
@@ -6,8 +6,50 @@ use crate::{
     route::Route,
     stats::format_ms,
     store::{Status, use_store},
-    ui::{CaseDiagram, PracticeStats, StatusPicker},
+    algs::Set,
+    cube::{Cube, turn_alg},
+    render::{self, Style},
+    ui::{CaseDiagram, Diagram, PracticeStats, StatusPicker},
 };
+
+/// The case met from each side of the cube, with the algorithm rewritten
+/// for that grip. Sides that look the same are shown once.
+#[component]
+fn Sides(set: Set, alg: String) -> impl IntoView {
+    let s = t();
+    let style = Style::for_set(set);
+    let mut seen = Vec::new();
+    let mut sides = Vec::new();
+    let mut current = alg;
+    for _ in 0..4 {
+        if let Ok(cube) = Cube::case_of(&current) {
+            let sig = render::diagram(&cube, style).signature();
+            if !seen.contains(&sig) {
+                seen.push(sig);
+                sides.push((cube, current.clone()));
+            }
+        }
+        current = turn_alg(&current);
+    }
+    view! {
+        <h3>{s.sides}</h3>
+        <div class="sides">
+            {sides
+                .into_iter()
+                .map(|(cube, alg)| {
+                    view! {
+                        <figure>
+                            <Diagram cube=cube style=style class="case-cube" />
+                            <figcaption>
+                                <code class="alg">{alg}</code>
+                            </figcaption>
+                        </figure>
+                    }
+                })
+                .collect_view()}
+        </div>
+    }
+}
 
 #[component]
 pub fn CasePage(id: String) -> impl IntoView {
@@ -71,6 +113,11 @@ fn CaseDetails(case: &'static Case) -> impl IntoView {
                             }
                         })
                 }}
+                {(case.set != Set::F2l)
+                    .then_some(move || {
+                        let alg = custom().unwrap_or_else(|| case.alg.to_owned());
+                        view! { <Sides set=case.set alg=alg /> }
+                    })}
                 <h3>{s.set_up_case}</h3>
                 <p class="muted">{s.set_up_hint}</p>
                 <code class="alg">{case.setup()}</code>

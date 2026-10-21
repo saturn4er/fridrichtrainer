@@ -479,6 +479,18 @@ mod tests {
     }
 
     #[test]
+    fn turned_algorithms_solve_the_same_case() {
+        for case in CASES.iter().filter(|c| c.set != Set::F2l) {
+            let mut alg = case.alg.to_owned();
+            for _ in 0..3 {
+                alg = crate::cube::turn_alg(&alg);
+                assert_eq!(matches_case(case, &alg), Ok(()), "{}: {alg}", case.name);
+            }
+        }
+        assert_eq!(crate::cube::turn_alg("R U2 x' M S' z2"), "B U2 z S M x2");
+    }
+
+    #[test]
     fn invert_reverses_moves() {
         assert_eq!(invert("R U2 R' (U' F2')"), "F2 U R U2 R'");
     }

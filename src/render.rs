@@ -12,6 +12,17 @@ pub struct Diagram {
     pub arrows: Vec<Arrow>,
 }
 
+impl Diagram {
+    /// Identifies the picture: equal signatures draw the same thing.
+    pub fn signature(&self) -> String {
+        let mut sig: String = self.polys.iter().map(|p| p.class).collect();
+        for a in &self.arrows {
+            sig.push_str(&format!("|{:.0},{:.0},{:.0},{:.0},{}", a.x1, a.y1, a.x2, a.y2, a.heads.len()));
+        }
+        sig
+    }
+}
+
 /// A line from one top-layer piece to the slot it is moved into, with an
 /// arrowhead at the destination, or at both ends for a swap.
 pub struct Arrow {
