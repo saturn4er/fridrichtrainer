@@ -1,0 +1,4 @@
+/target
+fridrich.db*
+.playwright-mcp
+/dist
