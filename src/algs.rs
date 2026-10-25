@@ -93,11 +93,11 @@ const F2L: [&str; 41] = [
     "U' R U' R' U F' U' F",
     "U' R U R' U R U R'",
     "U' R U2 R' U F' U' F",
-    "R' U2 R2 U R2 U R",
+    "F' U2 F U' R U R'",
     "U F' U F U' F' U' F",
     "U' R U' R' U R U R'",
     "R U' R' U2 F' U' F",
-    "R2 U2 R' U' R U' R2",
+    "F R' F' R U R U R'",
     "R U2 R' U' R U R'",
     "F' U2 F U F' U' F",
     "U R U2 R' U R U' R'",
@@ -555,6 +555,94 @@ mod search {
         for alg in found.values() {
             let cube = Cube::case_of(alg).unwrap();
             println!("{:30?} {}", f2l_group(&cube), alg);
+        }
+    }
+
+    const TRIGGERS: [(&str, f64); 20] = [
+        ("F R U R' U' F'", 2.6),
+        ("F U R U' R' F'", 2.7),
+        ("R U R' U'", 1.5),
+        ("U R U' R'", 1.5),
+        ("R' F R F'", 1.7),
+        ("F R' F' R", 1.7),
+        ("R U' R' U", 1.6),
+        ("U' R U R'", 1.6),
+        ("R U R'", 1.2),
+        ("R U' R'", 1.2),
+        ("R U2 R'", 1.3),
+        ("R' U R", 1.3),
+        ("R' U' R", 1.3),
+        ("R' U2 R", 1.4),
+        ("F' U' F", 1.5),
+        ("F' U F", 1.5),
+        ("F' U2 F", 1.6),
+        ("F U F'", 1.6),
+        ("F U' F'", 1.6),
+        ("F R F'", 1.8),
+    ];
+
+    /// Cheapest split of the algorithm into triggers and single moves.
+    fn cost(alg: &str) -> f64 {
+        let moves: Vec<&str> = alg.split_whitespace().collect();
+        let single = |m: &str| match m {
+            "U" | "U'" => 0.6,
+            "U2" => 0.7,
+            "R" | "R'" => 1.0,
+            "R2" => 1.4,
+            "F" | "F'" => 1.6,
+            _ => 2.6,
+        };
+        let mut best = vec![f64::INFINITY; moves.len() + 1];
+        best[0] = 0.0;
+        for i in 0..moves.len() {
+            let here = best[i];
+            best[i + 1] = best[i + 1].min(here + single(moves[i]));
+            for (t, c) in TRIGGERS {
+                let n = t.split(' ').count();
+                if moves.len() - i >= n && moves[i..i + n].join(" ") == t {
+                    best[i + n] = best[i + n].min(here + c);
+                }
+            }
+        }
+        best[moves.len()]
+    }
+
+    fn collect(cube: &mut Cube, path: &mut Vec<usize>, depth: usize, gens: &[usize], moves: &[Move], best: &mut HashMap<String, String>) {
+        if !path.is_empty() && cube.pieces_home(f2l_untouched) {
+            let key = case_key(Set::F2l, cube);
+            let alg = invert(&path.iter().map(|&i| GEN[i]).collect::<Vec<_>>().join(" "));
+            if best.get(&key).is_none_or(|b| cost(&alg) < cost(b)) {
+                best.insert(key, alg);
+            }
+        }
+        if depth == 0 {
+            return;
+        }
+        for &i in gens {
+            if path.last().is_some_and(|&p| p / 3 == i / 3) {
+                continue;
+            }
+            let saved = cube.clone();
+            cube.apply_move(moves[i]);
+            path.push(i);
+            collect(cube, path, depth - 1, gens, moves, best);
+            path.pop();
+            *cube = saved;
+        }
+    }
+
+    #[test]
+    #[ignore]
+    fn f2l_comfort() {
+        let moves: Vec<Move> = GEN.iter().map(|m| parse(m).unwrap()[0]).collect();
+        let mut best = HashMap::new();
+        collect(&mut Cube::solved(), &mut Vec::new(), 14, &[0, 1, 2, 3, 4, 5], &moves, &mut best);
+        collect(&mut Cube::solved(), &mut Vec::new(), 10, &[0, 1, 2, 3, 4, 5, 6, 7], &moves, &mut best);
+        for (n, c) in of_set(Set::F2l).enumerate() {
+            let key = case_key(Set::F2l, &Cube::case_of(c.alg).unwrap());
+            let found = &best[&key];
+            let mark = if cost(found) + 0.3 < cost(c.alg) { "*" } else { " " };
+            println!("{mark} F2L {:2} | {} ({:.1}) | {} ({:.1})", n + 1, c.alg, cost(c.alg), found, cost(found));
         }
     }
 }
