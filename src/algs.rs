@@ -193,8 +193,8 @@ const PLL: [(&str, Group, &str); 21] = [
     ("Ab", Group::CornersOnly, "x R2 D2 R U R' D2 R U' R x'"),
     ("E", Group::CornersOnly, "x' R U' R' D R U R' D' R U R' D R U' R' D' x"),
     ("H", Group::EdgesOnly, "M2 U M2 U2 M2 U M2"),
-    ("Ua", Group::EdgesOnly, "M2 U M U2 M' U M2"),
-    ("Ub", Group::EdgesOnly, "M2 U' M U2 M' U' M2"),
+    ("Ua", Group::EdgesOnly, "R2 U' R' U' R U R U R U' R"),
+    ("Ub", Group::EdgesOnly, "R2 U R U R' U' R' U' R' U R'"),
     ("Z", Group::EdgesOnly, "M' U M2 U M2 U M' U2 M2 U'"),
     ("F", Group::AdjacentSwap, "R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R"),
     ("Ja", Group::AdjacentSwap, "x R2 F R F' R U2 r' U r U2 x'"),
@@ -645,4 +645,5 @@ mod search {
             println!("{mark} F2L {:2} | {} ({:.1}) | {} ({:.1})", n + 1, c.alg, cost(c.alg), found, cost(found));
         }
     }
+
 }
