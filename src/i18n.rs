@@ -165,7 +165,7 @@ static EN: Strings = Strings {
     status_learning: "Learning",
     status_learned: "Learned",
     all: "All",
-    train_learning: "Practice “Learning” →",
+    train_learning: "Practice “Learning”",
     empty_filter: "Nothing here — try another filter.",
     best_and_attempts: "Best time · attempts",
     learned_summary: |learned, total, learning| {
@@ -198,7 +198,7 @@ static EN: Strings = Strings {
     no_cases_link: "Algorithms",
     no_cases_end: " page or pick “Any”.",
     set_up: "Set up:",
-    next_case: "Next case →",
+    next_case: "Next case",
     next_hint: "Space or Enter — next.",
 
     data_title: "Data",
@@ -304,7 +304,7 @@ static UK: Strings = Strings {
     status_learning: "Вчу",
     status_learned: "Вивчив",
     all: "Усі",
-    train_learning: "Тренувати «Вчу» →",
+    train_learning: "Тренувати «Вчу»",
     empty_filter: "Тут порожньо — зміни фільтр.",
     best_and_attempts: "Найкращий час · спроб",
     learned_summary: |learned, total, learning| {
@@ -337,7 +337,7 @@ static UK: Strings = Strings {
     no_cases_link: "Алгоритми",
     no_cases_end: " або обери «Будь-які».",
     set_up: "Виставити:",
-    next_case: "Наступний випадок →",
+    next_case: "Наступний випадок",
     next_hint: "Пробіл або Enter — наступний.",
 
     data_title: "Дані",
