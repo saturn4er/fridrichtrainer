@@ -199,7 +199,7 @@ const PLL: [(&str, Group, &str); 21] = [
     ("F", Group::AdjacentSwap, "R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R"),
     ("Ja", Group::AdjacentSwap, "R' U L' U2 R U' R' U2 R L U'"),
     ("Jb", Group::AdjacentSwap, "R U R' F' R U R' U' R' F R2 U' R' U'"),
-    ("Ra", Group::AdjacentSwap, "R U' R' U' R U R D R' U' R D' R' U2 R' U'"),
+    ("Ra", Group::AdjacentSwap, "R U R' F' R U2 R' U2 R' F R U R U2 R' U'"),
     ("Rb", Group::AdjacentSwap, "R2 F R U R U' R' F' R U2 R' U2 R U"),
     ("T", Group::AdjacentSwap, "R U R' U' R' F R2 U' R' U' R U R' F'"),
     ("Na", Group::DiagonalSwap, "R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'"),
