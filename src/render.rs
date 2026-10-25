@@ -285,6 +285,15 @@ mod tests {
     }
 
     #[test]
+    fn pll_algorithms_need_no_final_u_turn() {
+        for case in crate::algs::of_set(Set::Pll) {
+            let moved = |auf: &str| piece_moves(&Cube::case_of(&format!("{}{auf}", case.alg)).unwrap()).len();
+            let best = [" U", " U2", " U'"].into_iter().map(moved).min().unwrap();
+            assert!(moved("") <= best, "{} moves fewer pieces with a final U turn", case.id);
+        }
+    }
+
+    #[test]
     fn svg_inlines_every_sticker_colour() {
         let d = diagram(&Cube::case_of(find("pll-t").unwrap().alg).unwrap(), Style::Permutation);
         let svg = d.to_svg();
@@ -313,3 +322,4 @@ mod tests {
         assert!(diagram(&cube, Style::Orientation).arrows.is_empty());
     }
 }
+
