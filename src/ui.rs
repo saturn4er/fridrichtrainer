@@ -34,6 +34,34 @@ pub fn Diagram(cube: Cube, style: Style, #[prop(optional, into)] class: String) 
     }
 }
 
+/// Shows `cube` as the tab icon while the calling component is mounted.
+pub fn use_favicon(cube: impl Fn() -> Cube + 'static, style: Style) {
+    let Ok(Some(link)) = document().query_selector("link[rel=icon]") else {
+        return;
+    };
+    if !link.has_attribute("data-default") {
+        let _ = link.set_attribute("data-default", &link.get_attribute("href").unwrap_or_default());
+    }
+    let shown = std::sync::Arc::new(std::sync::Mutex::new(String::new()));
+    let set = shown.clone();
+    Effect::new(move || {
+        let svg = render::diagram(&cube(), style).to_svg();
+        let href = format!("data:image/svg+xml,{}", js_sys::encode_uri_component(&svg));
+        let _ = link.set_attribute("href", &href);
+        *set.lock().unwrap() = href;
+    });
+    on_cleanup(move || {
+        let Ok(Some(link)) = document().query_selector("link[rel=icon]") else {
+            return;
+        };
+        if link.get_attribute("href").as_deref() == Some(shown.lock().unwrap().as_str())
+            && let Some(default) = link.get_attribute("data-default")
+        {
+            let _ = link.set_attribute("href", &default);
+        }
+    });
+}
+
 #[component]
 pub fn CaseDiagram(case: &'static Case, #[prop(optional, into)] class: String) -> impl IntoView {
     let cube = Cube::case_of(case.alg).expect("built-in algorithms parse");

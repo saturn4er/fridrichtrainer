@@ -9,7 +9,7 @@ use crate::{
     algs::Set,
     cube::{Cube, turn_alg},
     render::{self, Style},
-    ui::{CaseDiagram, Diagram, PracticeStats, StatusPicker},
+    ui::{CaseDiagram, Diagram, PracticeStats, StatusPicker, use_favicon},
 };
 
 /// The case met from each side of the cube, with the algorithm rewritten
@@ -73,6 +73,7 @@ fn CaseDetails(case: &'static Case) -> impl IntoView {
     let draft = RwSignal::new(data.with_untracked(|d| d.custom_alg(&case.id)).unwrap_or_default());
     let error = RwSignal::new(None::<String>);
     let times = Signal::derive(move || data.with(|d| d.times(&case.id)));
+    use_favicon(move || Cube::case_of(case.alg).expect("built-in algorithms parse"), Style::for_set(case.set));
 
     let save = move |ev: leptos::ev::SubmitEvent| {
         ev.prevent_default();

@@ -7,7 +7,7 @@ use crate::{
     stats::{self, format_ms, format_result},
     store::{Penalty, use_store},
     timer::Timer,
-    ui::{Diagram, Stat, dash, dash_avg},
+    ui::{Diagram, Stat, dash, dash_avg, use_favicon},
 };
 
 pub fn random_index(n: usize) -> usize {
@@ -20,6 +20,12 @@ pub fn TimerPage() -> impl IntoView {
     let s = t();
     let scramble = RwSignal::new(stats::scramble(random_index));
     let new_scramble = move || scramble.set(stats::scramble(random_index));
+    let scrambled = move || {
+        let mut cube = Cube::solved();
+        cube.apply_alg(&scramble.get()).expect("scrambles parse");
+        cube
+    };
+    use_favicon(scrambled, Style::Full);
 
     let results = Memo::new(move |_| data.with(|d| d.results()));
     let valid = move || results.with(|r| r.iter().flatten().copied().collect::<Vec<_>>());
@@ -45,11 +51,7 @@ pub fn TimerPage() -> impl IntoView {
                         <i class="swatch st-f"></i> " " {s.hold[2]}
                     </p>
                 </div>
-                {move || {
-                    let mut cube = Cube::solved();
-                    cube.apply_alg(&scramble.get()).expect("scrambles parse");
-                    view! { <Diagram cube=cube style=Style::Full class="scramble-cube" /> }
-                }}
+                {move || view! { <Diagram cube=scrambled() style=Style::Full class="scramble-cube" /> }}
             </section>
 
             <section class="stats">

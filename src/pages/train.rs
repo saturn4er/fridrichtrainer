@@ -8,7 +8,9 @@ use crate::{
     stats::format_ms,
     store::{Status, use_store},
     timer::Timer,
-    ui::{CaseDiagram, PracticeStats},
+    cube::Cube,
+    render::Style,
+    ui::{CaseDiagram, PracticeStats, use_favicon},
 };
 
 #[component]
@@ -112,6 +114,7 @@ fn Training(
             .unwrap_or_else(|| case.alg.to_owned())
     };
     let times = Signal::derive(move || data.with(|d| d.times(&case.id)));
+    use_favicon(move || Cube::case_of(case.alg).expect("built-in algorithms parse"), Style::for_set(case.set));
 
     view! {
         <div class="train">

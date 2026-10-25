@@ -21,6 +21,27 @@ impl Diagram {
         }
         sig
     }
+
+    /// The stickers as a self-contained SVG document with the palette inlined,
+    /// for places the page stylesheet does not reach, like the tab icon.
+    pub fn to_svg(&self) -> String {
+        let mut svg = format!(r#"<svg xmlns="http://www.w3.org/2000/svg" viewBox="{}">"#, self.view_box);
+        for p in &self.polys {
+            let fill = match p.class {
+                "st st-u" => "#ffd500",
+                "st st-d" => "#ffffff",
+                "st st-f" => "#009b48",
+                "st st-b" => "#0046ad",
+                "st st-r" => "#ff5800",
+                "st st-l" => "#c41e3a",
+                "st st-x" => "#9a9fa8",
+                _ => "#1b1d22",
+            };
+            svg.push_str(&format!(r##"<polygon points="{}" fill="{fill}" stroke="#1b1d22" stroke-width="1.2"/>"##, p.points));
+        }
+        svg.push_str("</svg>");
+        svg
+    }
 }
 
 /// A line from one top-layer piece to the slot it is moved into, with an
@@ -261,6 +282,15 @@ mod tests {
 
     fn moves_of(id: &str) -> Vec<(Slot, Slot, bool)> {
         piece_moves(&Cube::case_of(find(id).unwrap().alg).unwrap())
+    }
+
+    #[test]
+    fn svg_inlines_every_sticker_colour() {
+        let d = diagram(&Cube::case_of(find("pll-t").unwrap().alg).unwrap(), Style::Permutation);
+        let svg = d.to_svg();
+        assert_eq!(svg.matches("<polygon").count(), d.polys.len());
+        assert!(!svg.contains("class="));
+        assert!(svg.contains(r##"fill="#ffd500""##));
     }
 
     #[test]
