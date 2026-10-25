@@ -645,5 +645,4 @@ mod search {
             println!("{mark} F2L {:2} | {} ({:.1}) | {} ({:.1})", n + 1, c.alg, cost(c.alg), found, cost(found));
         }
     }
-
 }
